@@ -1,0 +1,98 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_normal"
+    android:paddingRight="@dimen/margin_normal"
+    tools:context="com.hnxjgou.xinjia.view.user.LoginFragment">
+
+    <EditText
+        android:id="@+id/et_phone"
+        style="@style/common_input_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:imeOptions="actionNext"
+        android:hint="@string/input_phone"
+        android:drawableLeft="@drawable/icon_phone"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_phone"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:background="@drawable/common_input">
+
+        <TextView
+            android:id="@+id/btn_get_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_rec_e49d35"
+            android:textColor="@color/color_e49d35"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_smaller"
+            android:paddingTop="@dimen/margin_smaller"
+            android:text="@string/get_code"
+            android:textSize="@dimen/smaller_txt_size"/>
+
+        <EditText
+            android:id="@+id/et_code"
+            style="@style/common_input_style"
+            android:background="@color/color_transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/btn_get_code"
+            android:inputType="number"
+            android:imeOptions="actionNext"
+            android:drawableLeft="@drawable/icon_code"
+            android:hint="@string/input_code"
+            />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_pwd"
+        style="@style/common_input_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_code"
+        android:inputType="textPassword"
+        android:imeOptions="actionNext"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:hint="@string/input_pwd"
+        android:drawableLeft="@drawable/icon_pwd"
+        />
+
+    <EditText
+        android:id="@+id/et_confirm_pwd"
+        style="@style/common_input_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_pwd"
+        android:inputType="textPassword"
+        android:imeOptions="actionDone"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:hint="@string/input_confirm_pwd"
+        android:drawableLeft="@drawable/icon_pwd"
+        />
+
+
+    <Button
+        android:id="@+id/btn_login"
+        style="@style/common_button_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_confirm_pwd"
+        android:layout_marginTop="@dimen/margin_xlarge"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:text="@string/immediately_register"
+        android:enabled="false"/>
+
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImageTextView">
+        <attr name="text" format="string"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColor" format="color"/>
+        <!-- 定义文字和图片直接的距离 -->
+        <attr name="space" format="dimension"/>
+    </declare-styleable>
+</resources>
