@@ -1,16 +1,24 @@
 package com.hnxjgou.xinjia.presenter;
 
+import android.app.Activity;
+
+import com.google.gson.JsonSyntaxException;
+import com.hnxjgou.xinjia.R;
 import com.hnxjgou.xinjia.model.Callback;
 import com.hnxjgou.xinjia.model.OkHttpUtil;
 import com.hnxjgou.xinjia.utils.GsonUtil;
 import com.hnxjgou.xinjia.utils.LogUtil;
 import com.hnxjgou.xinjia.view.base.IBaseView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -23,7 +31,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     protected final String TAG = getClass().getSimpleName();
 
-    private List<String> urls;
+    private List<Object> tags;
 
     public Type mType;
 
@@ -41,7 +49,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
      */
     public void attachView(V mvpView) {
         this.mvpView = mvpView;
-        urls = new ArrayList<>();
+        tags = new ArrayList<>();
     }
 
     /**
@@ -49,13 +57,13 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
      */
     public void detachView() {
         this.mvpView = null;
-        if (urls != null) {
-            for (String url: urls) {
-                OkHttpUtil.getInstance().cancelTag(url);
+        if (tags != null) {
+            for (Object tag: tags) {
+                OkHttpUtil.getInstance().cancelTag(tag);
             }
-            urls.clear();
+            tags.clear();
         }
-        urls = null;
+        tags = null;
     }
 
     /**
@@ -106,62 +114,112 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
     }
 
     @Override
-    public void onPrepare() {
-        mvpView.showLoading();
+    public void onPrepare(final Object tag) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvpView.showLoading(tag);
+            }
+        });
     }
 
     @Override
-    public void onSuccess(T data) {
-        LogUtil.d(TAG, "请求成功：" + data);
-        mvpView.showData(data);
+    public void onSuccess(final T data, final Object tag) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvpView.showData(data, tag);
+            }
+        });
     }
 
     @Override
-    public void onFailure(String msg) {
-        mvpView.showToast(msg);
+    public void onFailure(final String msg) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvpView.showErr(msg);
+            }
+        });
     }
 
     @Override
-    public void onError(String error) {
-        mvpView.showErr(error);
+    public void onError(final String error) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvpView.showErr(error);
+            }
+        });
     }
 
     @Override
-    public void onComplete() {
-        mvpView.hideLoading();
+    public void onComplete(final Object tag) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvpView.hideLoading(tag);
+            }
+        });
+        tags.remove(tag);
     }
 
     @Override
-    public void onFailure(Call call, IOException e) {
-        onFailure(e.getMessage());
-        onComplete();
+    public void onFailure(final Call call, final IOException e) {
+        ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onFailure(e.getMessage());
+                onComplete(call.request().tag());
+            }
+        });
     }
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-//        LogUtil.d(TAG, "返回数据为：" + response.body().string());
         int code = response.code();
         if (code == 200) {
-            onSuccess((T) GsonUtil.json2Obj(response.body().string(), mType));
+            try {
+                String responseStr = response.body().string();
+                LogUtil.i(TAG, "接口返回:" + responseStr);
+                JSONObject jsonObject = new JSONObject(responseStr);
+                int api_code = jsonObject.optInt("Code", -1);
+                if (api_code == 200) { // 接口调用逻辑成功返回
+                    if (mType.equals(String.class) || mType.equals(Object.class)) {
+                        onSuccess((T) responseStr, response.request().tag());
+                    }else {
+                        try {
+                            onSuccess((T) GsonUtil.json2Obj(responseStr, mType), response.request().tag());
+                        }catch (JsonSyntaxException e){
+                            onError(getView().getContext().getString(R.string.data_parse_error));
+                        }
+                    }
+                }else {
+                    // 接口调用出现异常
+                    onError(jsonObject.optString("Message", getView().getContext().getString(R.string.data_parse_error)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }else {
             onError(response.message());
         }
-        onComplete();
+        onComplete(response.request().tag());
     }
 
-    public void onLoadDataByGet(String url){
+    public void onLoadDataByGet(String url, Object tag){
         if (isViewAttached()) {
-            onPrepare();
-            urls.add(url);
-            OkHttpUtil.getInstance().requestGetAPI(url, this);
+            onPrepare(tag);
+            tags.add(tag);
+            OkHttpUtil.getInstance().requestGetAPI(url, tag, this);
         }
     }
 
-    public void onLoadDataByPost(String url, String params){
+    public void onLoadDataByPost(String url, Object tag, Map<String, String> params){
         if (isViewAttached()) {
-            onPrepare();
-            urls.add(url);
-            OkHttpUtil.getInstance().requestPostAPI(url, params, this);
+            onPrepare(tag);
+            tags.add(tag);
+            OkHttpUtil.getInstance().requestPostAPI(url, tag, params, this);
         }
     }
 }

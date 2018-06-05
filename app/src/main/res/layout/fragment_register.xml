@@ -17,6 +17,7 @@
         android:imeOptions="actionNext"
         android:hint="@string/input_phone"
         android:drawableLeft="@drawable/icon_phone"
+        android:maxLength="11"
         />
 
     <RelativeLayout
@@ -28,7 +29,7 @@
         android:background="@drawable/common_input">
 
         <TextView
-            android:id="@+id/btn_get_code"
+            android:id="@+id/tv_get_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -48,10 +49,11 @@
             android:background="@color/color_transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/btn_get_code"
+            android:layout_toLeftOf="@id/tv_get_code"
             android:inputType="number"
             android:imeOptions="actionNext"
             android:drawableLeft="@drawable/icon_code"
+            android:maxLength="4"
             android:hint="@string/input_code"
             />
     </RelativeLayout>
@@ -65,6 +67,7 @@
         android:inputType="textPassword"
         android:imeOptions="actionNext"
         android:layout_marginTop="@dimen/margin_normal"
+        android:maxLength="16"
         android:hint="@string/input_pwd"
         android:drawableLeft="@drawable/icon_pwd"
         />
@@ -84,7 +87,7 @@
 
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_register"
         style="@style/common_button_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

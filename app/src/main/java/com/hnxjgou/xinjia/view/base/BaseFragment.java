@@ -1,5 +1,6 @@
 package com.hnxjgou.xinjia.view.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.hnxjgou.xinjia.presenter.BasePresenter;
+
+import java.util.Map;
 
 /**
  * Created by apple on 2018/5/9.
@@ -20,7 +23,6 @@ public abstract class BaseFragment<T> extends Fragment implements IBaseView<T> {
     protected IFragmentCallback fragmentCallback;
     private Context context;
     private BasePresenter<T, IBaseView> basePresenter;
-
 
     public void setFragmentCallback(IFragmentCallback fragmentCallback) {
         this.fragmentCallback = fragmentCallback;
@@ -58,31 +60,39 @@ public abstract class BaseFragment<T> extends Fragment implements IBaseView<T> {
         return context;
     }
 
+    protected void finish() {
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
+        }
+    }
+
     /**
      * POST方式获取数据
      * @param url
-     * @param jsonParams
+     * @param params
+     * @param tag 用来标志多个请求的返回。传null默认为url。
      */
-    protected void doPost(String url, String jsonParams){
-        basePresenter.onLoadDataByPost(url, jsonParams);
+    protected void doPost(String url, Object tag, Map<String, String> params){
+        basePresenter.onLoadDataByPost(url, tag, params);
     }
 
     /**
      * GET方式请求获取数据
      * @param url
+     * @param tag 用来标志多个请求的返回。传null默认为url。
      */
-    protected void doGet(String url){
-        basePresenter.onLoadDataByGet(url);
+    protected void doGet(String url, Object tag){
+        basePresenter.onLoadDataByGet(url, tag);
     }
 
     @Override
-    public void showLoading() {
-        if (context != null && context instanceof BaseActivity) ((BaseActivity) context).showLoading();
+    public void showLoading(Object tag) {
+        if (context != null && context instanceof BaseActivity) ((BaseActivity) context).showLoading(tag);
     }
 
     @Override
-    public void hideLoading() {
-        if (context != null && context instanceof BaseActivity) ((BaseActivity) context).hideLoading();
+    public void hideLoading(Object tag) {
+        if (context != null && context instanceof BaseActivity) ((BaseActivity) context).hideLoading(tag);
     }
 
     @Override
@@ -96,7 +106,7 @@ public abstract class BaseFragment<T> extends Fragment implements IBaseView<T> {
     }
 
     @Override
-    public void showData(T data) {
+    public void showData(T data, Object tag) {
 
     }
 }

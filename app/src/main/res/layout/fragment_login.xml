@@ -101,8 +101,8 @@
         android:gravity="center">
         <com.hnxjgou.xinjia.widget.ImageTextView
             android:id="@+id/itv_wechat"
-            android:layout_width="@dimen/large_width"
-            android:layout_height="@dimen/large_height"
+            android:layout_width="@dimen/xlarge_width"
+            android:layout_height="@dimen/xlarge_height"
             app:textSize="@dimen/smaller_txt_size"
             app:textColor="@color/color_999999"
             app:text="@string/login_by_wechat"

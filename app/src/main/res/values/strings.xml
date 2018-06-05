@@ -15,4 +15,11 @@
     <string name="classify">分类</string>
     <string name="shopping_cart">购物车</string>
     <string name="mine">我的</string>
+    <string name="rightful_phone">请输入国内合法手机号码</string>
+    <string name="data_parse_error">数据解析异常</string>
+    <string name="pwd_unidentical">两次密码输入不一致</string>
+    <string name="re_get_code">%1d秒后重新获取</string>
+    <string name="get_code_successed">验证码发送成功</string>
+    <string name="reload">重新加载</string>
+
 </resources>

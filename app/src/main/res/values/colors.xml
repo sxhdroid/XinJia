@@ -5,10 +5,13 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="color_999999">#999999</color>
+    <color name="color_333333">#333333</color>
     <color name="color_2ea041">@color/colorPrimary</color>
     <color name="color_1d802e">#1d802e</color>
     <color name="color_bbbbbb">#bbbbbb</color>
+    <color name="color_dddddd">#dddddd</color>
     <color name="color_eeeee">#eeeeee</color>
+    <color name="color_f2f2f2">#f2f2f2</color>
     <color name="color_e49d35">#e49d35</color>
     <color name="common_txt_color">@color/color_999999</color>
     <color name="common_hint_color">@color/color_999999</color>

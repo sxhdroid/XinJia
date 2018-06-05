@@ -1,0 +1,10 @@
+package com.hnxjgou.xinjia.view.adapter;
+
+/**
+ * RecuclerView多布局实现
+ */
+
+public interface MultiTypeSupport<T> {
+    // 根据当前位置或者条目数据返回布局
+    int getLayoutId(int position);
+}

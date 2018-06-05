@@ -5,16 +5,21 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.hnxjgou.xinjia.R;
 
 /**
  */
 public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, IFragmentCallback {
 
-    private final String TAG = "BaseActivity";
+    protected final String TAG = getClass().getSimpleName();
 
     private ProgressDialog progressDialog;
 
@@ -36,7 +41,7 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     private void initActionBar() {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        actionBar.setHomeAsUpIndicator(R.drawable.icon_back);
     }
 
     public void setActionBarTitle(@StringRes int resId){
@@ -51,6 +56,15 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void showFragment(Fragment fragment, boolean addToBack){
+        if (fragment instanceof BaseFragment) ((BaseFragment) fragment).setFragmentCallback(this);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.push_left_in, R.anim.push_right_out, R.anim.push_right_in, R.anim.push_left_out);
+        transaction.replace(R.id.fl_container, fragment, fragment.getClass().getSimpleName());
+        if (addToBack) transaction.addToBackStack(fragment.getTag());
+        transaction.commit();
     }
 
     @Override
@@ -68,17 +82,18 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     }
 
     @Override
-    public void showLoading() {
+    public void showLoading(Object tag) {
         progressDialog.show();
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoading(Object tag) {
         progressDialog.dismiss();
     }
 
     @Override
     public void showToast(String msg) {
+        if (TextUtils.isEmpty(msg)) return;
         mToast.setText(msg);
         mToast.show();
     }
@@ -89,7 +104,7 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     }
 
     @Override
-    public void showData(T data) {
+    public void showData(T data, Object tag) {
 
     }
 

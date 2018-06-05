@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.hnxjgou.xinjia.R;
-import com.hnxjgou.xinjia.view.user.UserActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                startActivity(new Intent(SplashActivity.this, UserActivity.class));
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 finish();
             }
         }, 2000);

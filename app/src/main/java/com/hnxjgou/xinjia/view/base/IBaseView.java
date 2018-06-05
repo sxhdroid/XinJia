@@ -9,14 +9,14 @@ import android.content.Context;
 public interface IBaseView<T> {
 
     /**
-     * 显示正在加载view
+     * 网络请求开始时执行该方法
      */
-    void showLoading();
+    void showLoading(Object tag);
 
     /**
-     * 关闭正在加载view
+     * 网络请求完成时执行该方法
      */
-    void hideLoading();
+    void hideLoading(Object tag);
 
     /**
      * 显示提示
@@ -34,8 +34,9 @@ public interface IBaseView<T> {
     /**
      * 请求成功显示数据
      * @param data
+     * @param tag 用以区分不同请求的数据显示。与请求传入的一致。
      */
-    void showData(T data);
+    void showData(T data, Object tag);
 
     /**
      * 获取上下文

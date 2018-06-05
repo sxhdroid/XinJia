@@ -1,10 +1,14 @@
 package com.hnxjgou.xinjia.model;
 
+import com.hnxjgou.xinjia.utils.LogUtil;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
-import okhttp3.MediaType;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 
 /**
  * Created by apple on 2018/5/23.
@@ -18,7 +22,11 @@ public class OkHttpUtil {
 
 
     private OkHttpUtil(){
-        httpClient = new OkHttpClient();
+        httpClient = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build();
     }
 
     public static OkHttpUtil getInstance() {
@@ -32,32 +40,42 @@ public class OkHttpUtil {
         return instance;
     }
 
-    // 执行Get网络请求，此类看需求由自己选择写与不写
-    public void requestGetAPI(String url, Callback callback) {
+    /**
+     * 执行Get网络请求
+     * @param url 请求地址
+     * @param tag
+     */
+    public void requestGetAPI(String url, Object tag, Callback callback) {
         //这里写具体的网络请求
         Request request = new Request.Builder()
                 .get()
                 .url(url)
-                .tag(url)
+                .tag(tag == null ? url : tag)
                 .build();
         httpClient.newCall(request).enqueue(callback);
     }
 
-    // 执行Post网络请求，此类看需求由自己选择写与不写
-    public void requestPostAPI(String url, String jsonParams, Callback callback) {
+    // 执行Post网络请求
+    public void requestPostAPI(String url, Object tag, Map<String, String> params, Callback callback) {
         //这里写具体的网络请求
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式，
-        RequestBody body = RequestBody.create(JSON, jsonParams);
-        final Request request = new Request.Builder()
+        FormBody.Builder builder = new FormBody.Builder();
+        if (params != null) {
+            for (String key : params.keySet()) {
+                builder.add(key, params.get(key));
+            }
+        }
+        builder.add("user_token", "");
+        Request request = new Request.Builder()
                 .url(url)
-                .post(body)
-                .tag(url)
+                .post(builder.build())
+                .tag(tag == null ? url : tag)
                 .build();
+        LogUtil.i("requestPostAPI", "url = " + url);
         httpClient.newCall(request).enqueue(callback);
     }
 
     /**根据tag取消请求*/
-    public void cancelTag(String tag) {
+    public void cancelTag(Object tag) {
         for (Call call : httpClient.dispatcher().queuedCalls()) {
             if (tag.equals(call.request().tag())) {
                 call.cancel();
