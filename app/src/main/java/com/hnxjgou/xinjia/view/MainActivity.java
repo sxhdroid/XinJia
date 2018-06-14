@@ -1,18 +1,29 @@
 package com.hnxjgou.xinjia.view;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.hnxjgou.xinjia.R;
+import com.hnxjgou.xinjia.utils.AMapLocationUtil;
 import com.hnxjgou.xinjia.view.base.BaseActivity;
+import com.hnxjgou.xinjia.view.cart.CartFragment;
+import com.hnxjgou.xinjia.view.index.ClassificationFragment;
+import com.hnxjgou.xinjia.view.user.MineFragment;
 import com.hnxjgou.xinjia.widget.CustomViewPager;
 
 public class MainActivity extends BaseActivity {
+
+    private static final int PERMISSION_REQUEST_CODE = 0;//申请权限请求码
 
     private CustomViewPager viewPager; // fragment页容器
     private BottomNavigationBar bottomNavigationBar; // 底部tab控件
@@ -21,6 +32,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermissions();
         initPager();
         initNavigationBar();
     }
@@ -42,9 +54,16 @@ public class MainActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 bottomNavigationBar.selectTab(position, false);
                 // 设置标题随tab页变化
-                if (position == 0) setActionBarTitle(R.string.classify);
-                else if (position == 1) setActionBarTitle(R.string.shopping_cart);
-                else setActionBarTitle(R.string.mine);
+                if (position == 0) {
+                    setActionBarTitle(R.string.classify);
+                    showActionBar();
+                } else if (position == 1) {
+                    setActionBarTitle(R.string.shopping_cart);
+                    showActionBar();
+                } else {
+                    setActionBarTitle(R.string.mine);
+                    hideActionBar();
+                }
             }
 
             @Override
@@ -97,6 +116,49 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AMapLocationUtil.getInstance().destroyLocation();
+    }
+
+    @SuppressLint("NewApi")
+    private void checkPermissions(){
+        if (isMarshmallow()) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // Permission has not been granted and must be requested.
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    // Provide an additional rationale to the user if the permission was not granted
+                    // and the user would benefit from additional context for the use of the permission.
+                }
+                // Request the permission. The result will be received in onRequestPermissionResult()
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSION_REQUEST_CODE);
+            } else {
+                // Permission is already available
+
+            }
+        }
+    }
+
+    // 判断是否是Android 6.0及以上系统
+    private static boolean isMarshmallow() {
+        return Build.VERSION.SDK_INT >= 23;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                // Permission request was denied.
+                Toast.makeText(this, "权限被拒绝", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter{

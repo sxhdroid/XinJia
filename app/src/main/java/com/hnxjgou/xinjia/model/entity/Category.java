@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Category {
 
-    public String CategoryId; // 类别ID
+    public int CategoryId; // 类别ID
     public List<Category> NodeList; // 子类别列表
     public String CategoryName; // 类别名称
     public String FatherName; // 父类别名称，如果已经是顶级类别则为空。

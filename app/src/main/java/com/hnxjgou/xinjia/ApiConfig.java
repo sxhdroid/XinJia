@@ -36,4 +36,21 @@ public class ApiConfig {
             return BASE_PROJECT_URL + api_method;
         }
     }
+
+    /**商家相关API*/
+    public final static class business{
+
+        /**获取商家列表-API名称*/
+
+        public final static String API_BUSINESS_LIST = "getBusinessList";
+
+        /**获取商家详情-API名称*/
+        public final static String API_BUSINESS_DETAIL = "getBusinessDetail";
+
+        private static final String BASE_PROJECT_URL = "http://www.hnxjgou.com/wechat/api/business/businessApi.asmx/";
+
+        public static String build_url(String api_method){
+            return BASE_PROJECT_URL + api_method;
+        }
+    }
 }

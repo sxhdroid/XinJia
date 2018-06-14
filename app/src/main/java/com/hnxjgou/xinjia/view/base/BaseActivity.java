@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hnxjgou.xinjia.R;
+import com.hnxjgou.xinjia.presenter.BasePresenter;
+
+import java.util.Map;
 
 /**
  */
@@ -26,6 +29,26 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     private Toast mToast;
     private ActionBar actionBar;
 
+    private BasePresenter<T, IBaseView> basePresenter;
+
+    /**
+     * POST方式获取数据
+     * @param url
+     * @param params
+     * @param tag 用来标志多个请求的返回。传null默认为url。
+     */
+    protected void doPost(String url, Object tag, Map<String, String> params){
+        basePresenter.onLoadDataByPost(url, tag, params);
+    }
+
+    /**
+     * GET方式请求获取数据
+     * @param url
+     * @param tag 用来标志多个请求的返回。传null默认为url。
+     */
+    protected void doGet(String url, Object tag){
+        basePresenter.onLoadDataByGet(url, tag);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +59,9 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
         mToast = Toast.makeText(this, null, Toast.LENGTH_SHORT);
 
         initActionBar();
+
+        basePresenter = new BasePresenter<>(getClass());
+        basePresenter.attachView(this);
     }
 
     private void initActionBar() {
@@ -48,6 +74,22 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
         actionBar.setTitle(resId);
     }
 
+    public void setActionBarTitle(String title){
+        actionBar.setTitle(title);
+    }
+
+    protected void hideActionBar(){
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
+    protected void showActionBar(){
+        if (actionBar != null) {
+            actionBar.show();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -58,6 +100,11 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 显示指定的Fragment
+     * @param fragment
+     * @param addToBack 是否支持返回
+     */
     protected void showFragment(Fragment fragment, boolean addToBack){
         if (fragment instanceof BaseFragment) ((BaseFragment) fragment).setFragmentCallback(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -79,6 +126,7 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        basePresenter.detachView();
     }
 
     @Override

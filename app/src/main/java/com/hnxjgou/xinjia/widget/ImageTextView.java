@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import com.hnxjgou.xinjia.R;
 
 /**
+ * 实现图片和文字的上下显示，默认水平居中。
  * Created by apple on 2018/5/16.
  */
 
@@ -30,7 +31,6 @@ public class ImageTextView extends ImageButton {
 
     private Paint mPaint;
     private Bitmap imageBitmap;
-    private Context context;
 
     private int mBitmapW;
     private int mBitmapH;
@@ -54,8 +54,6 @@ public class ImageTextView extends ImageButton {
 
     public ImageTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        this.context = context;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageTextView);
         text = a.getString(R.styleable.ImageTextView_text);

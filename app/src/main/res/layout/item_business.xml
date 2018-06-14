@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rec_fff_with_radius"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_smaller">
+
+    <!--logo-->
+    <ImageView
+        android:id="@+id/iv_business_logo"
+        android:layout_width="@dimen/large_height"
+        android:layout_height="@dimen/large_height"
+        android:background="@color/color_2ea041"
+        android:scaleType="fitXY" />
+
+    <!--名称-->
+    <TextView
+        android:id="@+id/tv_business_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_smaller"
+        android:layout_marginTop="@dimen/margin_smallest"
+        android:layout_toRightOf="@id/iv_business_logo"
+        android:maxLength="10"
+        android:maxLines="2"
+        android:textColor="@color/color_333333"
+        android:textSize="@dimen/small_txt_size" />
+
+    <!--折扣-->
+    <TextView
+        android:id="@+id/tv_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/tv_business_name"
+        android:layout_marginLeft="@dimen/margin_smallest"
+        android:lines="1"
+        android:textColor="@color/color_999999"
+        android:layout_alignBottom="@id/tv_business_name"
+        android:textSize="@dimen/smaller_txt_size" />
+
+    <!--星级-->
+    <RatingBar
+        android:id="@+id/rb_business"
+        style="@style/my_ratingbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_business_name"
+        android:layout_below="@id/tv_business_name"
+        android:layout_marginTop="@dimen/margin_smallest"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="3.5" />
+
+    <!--销售-->
+    <LinearLayout
+        android:id="@+id/ly_sales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_business_name"
+        android:layout_below="@id/rb_business"
+        android:layout_marginTop="@dimen/margin_smaller"
+        android:orientation="horizontal">
+
+        <!--今日销售-->
+        <TextView
+            android:id="@+id/tv_sales"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/smaller_txt_size" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_dddddd" />
+
+        <!--上月销售-->
+        <TextView
+            android:id="@+id/tv_last_month_sales"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_weight="1"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/smaller_txt_size" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_smaller"
+        android:layout_below="@id/ly_sales"
+        android:layout_toRightOf="@id/iv_business_logo"
+        android:background="@color/color_dddddd"
+        />
+
+    <!--距离-->
+    <TextView
+        android:id="@+id/tv_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/v_line"
+        android:layout_marginTop="@dimen/margin_smallest"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/smaller_txt_size" />
+
+    <!--详细地址-->
+    <TextView
+        android:id="@+id/tv_business_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_business_name"
+        android:layout_alignTop="@id/tv_distance"
+        android:layout_marginRight="@dimen/margin_smallest"
+        android:layout_toLeftOf="@id/tv_distance"
+        android:lines="1"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/smaller_txt_size" />
+
+
+</RelativeLayout>

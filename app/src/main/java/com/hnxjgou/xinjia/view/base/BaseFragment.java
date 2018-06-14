@@ -20,7 +20,7 @@ public abstract class BaseFragment<T> extends Fragment implements IBaseView<T> {
 
     protected final String TAG = getClass().getSimpleName();
 
-    protected IFragmentCallback fragmentCallback;
+    protected IFragmentCallback fragmentCallback; // 与宿主Activity通信的回调接口
     private Context context;
     private BasePresenter<T, IBaseView> basePresenter;
 

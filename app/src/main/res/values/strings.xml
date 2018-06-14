@@ -21,5 +21,10 @@
     <string name="re_get_code">%1d秒后重新获取</string>
     <string name="get_code_successed">验证码发送成功</string>
     <string name="reload">重新加载</string>
+    <string name="distance_km">%1$.1fkm</string>
+    <string name="data_error">数据异常</string>
+    <string name="sales">今日销量%1d</string>
+    <string name="last_month_sales">上月销量%1d</string>
+    <string name="extension">我要\n推广</string>
 
 </resources>

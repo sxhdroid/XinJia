@@ -24,7 +24,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 /**
- * Created by apple on 2018/5/3.
+ * MVP模式的，泛型支持List，但是List泛型的类型不能再是泛型类型。
  */
 
 public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
@@ -106,9 +106,6 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
         if (index >= params.length || index < 0) {
             return Object.class;
         }
-        if (!(params[index] instanceof Class)) {
-            return Object.class;
-        }
 
         return params[index];
     }
@@ -187,6 +184,14 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
                 if (api_code == 200) { // 接口调用逻辑成功返回
                     if (mType.equals(String.class) || mType.equals(Object.class)) {
                         onSuccess((T) responseStr, response.request().tag());
+                    }else if (mType instanceof ParameterizedType){
+                        // 如果又是泛型类型，则使用List返回
+                        try {
+                            onSuccess((T) GsonUtil.jsonArray2List(responseStr, "Data"
+                                    , ((ParameterizedType) mType).getActualTypeArguments()[0]), response.request().tag());
+                        }catch (JsonSyntaxException e){
+                            onError(getView().getContext().getString(R.string.data_parse_error));
+                        }
                     }else {
                         try {
                             onSuccess((T) GsonUtil.json2Obj(responseStr, mType), response.request().tag());

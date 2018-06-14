@@ -1,9 +1,11 @@
-package com.hnxjgou.xinjia.view;
+package com.hnxjgou.xinjia.view.index;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,19 +13,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.bumptech.glide.Glide;
 import com.hnxjgou.xinjia.ApiConfig;
 import com.hnxjgou.xinjia.R;
 import com.hnxjgou.xinjia.model.entity.Business;
 import com.hnxjgou.xinjia.model.entity.Category;
+import com.hnxjgou.xinjia.utils.AMapLocationUtil;
 import com.hnxjgou.xinjia.utils.GsonUtil;
-import com.hnxjgou.xinjia.utils.LogUtil;
 import com.hnxjgou.xinjia.view.adapter.CommonRecyclerAdapter;
 import com.hnxjgou.xinjia.view.adapter.MultiTypeSupport;
 import com.hnxjgou.xinjia.view.adapter.ViewHolder;
 import com.hnxjgou.xinjia.view.base.LazyLoadFragment;
+import com.hnxjgou.xinjia.widget.RecycleViewDivider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +39,7 @@ import java.util.Map;
 /**
  * 商家分类页
  */
-public class ClassificationFragment extends LazyLoadFragment<String> {
+public class ClassificationFragment extends LazyLoadFragment<String> implements AMapLocationUtil.OnLocationListener {
 
     private RecyclerView rv_left; // 左侧类型列表
     private RecyclerView rv_right; // 右侧指定类别下的数据列表
@@ -63,7 +69,7 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
             @Override
             public int getLayoutId(int position) {
                 return childCategoryAdapter.getViewType(position) == childCategoryAdapter.viewTypeGroup
-                        ? R.layout.item_category_lable : R.layout.item_category;
+                        ? R.layout.item_category_lable : R.layout.item_category_business;
             }
         });
     }
@@ -71,7 +77,22 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AMapLocationUtil.getInstance().addLocationListener(this);
+        AMapLocationUtil.getInstance().startLocation();
         return inflater.inflate(R.layout.fragment_classification, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        AMapLocationUtil.getInstance().addLocationListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        AMapLocationUtil.getInstance().stopLocation(); // 界面退出时停止定位
+        AMapLocationUtil.getInstance().removeLocationListener(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -83,7 +104,10 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
         btn_reload = view.findViewById(R.id.btn_reload);
 
         rv_left = view.findViewById(R.id.rv_left);
-        rv_right = view.findViewById(R.id.rv_right);
+        rv_right = view.findViewById(R.id.rv_common);
+        int rightPadding = getResources().getDimensionPixelSize(R.dimen.padding_normal);
+        int leftPadding = getResources().getDimensionPixelSize(R.dimen.margin_small);
+        rv_right.setPadding(leftPadding, 0, rightPadding, 0);
 
         categoryAdapter.setSelectPotision(categoryAdapter.getSelectPotision());//设置选中状态
         // 左侧类别列表项点击事件
@@ -103,16 +127,27 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
             @Override
             public void onGroupClick(RecyclerView.ViewHolder holder, int position) {
                 // 右侧类别点击事件
-                LogUtil.e(TAG, "点击的是类别 : " + childCategoryAdapter.getGroupItem(position).CategoryName);
+                AMapLocationUtil.getInstance().stopLocation();
+                AMapLocationUtil.getInstance().removeLocationListener(ClassificationFragment.this);
+                startActivity(new Intent(getActivity(), BusinessListActivity.class)
+                        .putExtra("categoryId", childCategoryAdapter.getGroupItem(position).CategoryId)
+                        .putExtra("categoryName", childCategoryAdapter.getGroupItem(position).CategoryName));
             }
 
             @Override
             public void onChildrenClick(RecyclerView.ViewHolder holder, int position) {
                 // 右侧商家点击事件
-                LogUtil.e(TAG, "点击的是商家 ： " + childCategoryAdapter.getChildItem(position).BusinessName);
+                AMapLocationUtil.getInstance().stopLocation();
+                AMapLocationUtil.getInstance().removeLocationListener(ClassificationFragment.this);
+                startActivity(new Intent(getActivity(), BusinessDetailActivity.class)
+                        .putExtra("businessId", childCategoryAdapter.getChildItem(position).BusinessId)
+                        .putExtra("businessName", childCategoryAdapter.getChildItem(position).BusinessName));
             }
         });
         rv_right.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecycleViewDivider divider = new RecycleViewDivider(getContext(), RecycleViewDivider.VERTICAL_LIST);
+        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shape_trans_divider));
+        rv_right.addItemDecoration(divider);
         rv_right.setAdapter(childCategoryAdapter);
 
         //重新加载数据按钮事件
@@ -150,6 +185,13 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
         }
     }
 
+    @Override
+    public void onLocation(AMapLocation aMapLocation) {
+//        LogUtil.e(TAG, "定位：" + aMapLocation.getAddress());
+        childCategoryAdapter.updateLocation(aMapLocation.getLongitude()
+                , aMapLocation.getLatitude());
+    }
+
     // 左侧类别列表适配器
     private class CategoryAdapter extends CommonRecyclerAdapter<Category> {
 
@@ -172,6 +214,8 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
 
         public final int viewTypeGroup = 1; // item的viewType为1，显示子类标签
         public final int viewTypeChild = 2; // item的viewType为2，显示子类标签
+
+        private double latitude, longitude;
 
         private Map<Integer, Category> groupItem = new HashMap<>();
 
@@ -250,15 +294,45 @@ public class ClassificationFragment extends LazyLoadFragment<String> {
 
         @Override
         public void convert(ViewHolder holder, int position, Category item) {
-            TextView textView = holder.getView(R.id.tv_category);
             // 正式的绑定数据
             if (getViewType(position) == viewTypeGroup) { // 类别item
+                TextView textView = holder.getView(R.id.tv_category);
                 textView.setText(getGroupItem(position).CategoryName);
             }else {
                 // 商家item
                 Business business = getChildItem(position);
-                textView.setText(business.BusinessName);
+                holder.setText(R.id.tv_business_name, business.BusinessName); // 设置商家名称
+                holder.setText(R.id.tv_business_address, business.DetailedAddress); // 设置商家地址
+                ImageView logo = holder.getView(R.id.iv_business_logo);
+                // 加载商家logo
+                Glide.with(ClassificationFragment.this).load(business.Logo).into(logo);
+                // 设置距离数据
+                if (latitude != 0 && longitude != 0) {
+                    int distance_m = AMapLocationUtil.calculateDistance(latitude, longitude
+                            , business.StoreLat, business.StoreLon);// 计算两点距离为m的数值
+                    if (distance_m / 1000 == 0) {
+                        // 不足1000m，以m为单位
+                        holder.setText(R.id.tv_distance,distance_m + "m");
+                    }else { // 以㎞为单位
+                        holder.setText(R.id.tv_distance, getString(R.string.distance_km, distance_m / 1000.0));
+                    }
+                }
             }
+        }
+
+        /**
+         * 更新距离数据
+         * @param longitude 经度
+         * @param latitude 维度
+         */
+        public void updateLocation(double longitude, double latitude) {
+            if (AMapLocationUtil.calculateDistance(latitude, longitude, this.latitude, this.longitude) < 100) {
+                // 如果新位置与上一次的位置变化不足100m，不更新界面
+                return;
+            }
+            this.latitude = latitude;
+            this.longitude = longitude;
+            notifyDataSetChanged();
         }
     }
 
