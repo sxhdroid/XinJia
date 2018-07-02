@@ -3,7 +3,7 @@ package com.hnxjgou.xinjia.model.entity;
 import java.util.List;
 
 /**
- * 分类的类比实体类
+ * 分类的类别实体类
  */
 public class Category {
 

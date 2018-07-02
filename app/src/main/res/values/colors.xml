@@ -13,9 +13,11 @@
     <color name="color_dddddd">#dddddd</color>
     <color name="color_eeeee">#eeeeee</color>
     <color name="color_f2f2f2">#f2f2f2</color>
+    <color name="color_f26716">#f26716</color>
     <color name="color_e49d35">#e49d35</color>
     <color name="common_txt_color">@color/color_999999</color>
     <color name="common_hint_color">@color/color_999999</color>
     <color name="color_transparent">@android:color/transparent</color>
     <color name="white">@android:color/white</color>
+    <color name="red">#FF0000</color>
 </resources>

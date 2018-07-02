@@ -32,7 +32,7 @@ import com.hnxjgou.xinjia.view.base.LazyLoadFragment;
 import com.hnxjgou.xinjia.widget.RecycleViewDivider;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -139,8 +139,9 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
                 // 右侧商家点击事件
                 AMapLocationUtil.getInstance().stopLocation();
                 AMapLocationUtil.getInstance().removeLocationListener(ClassificationFragment.this);
-                startActivity(new Intent(getActivity(), BusinessDetailActivity.class)
+                startActivity(new Intent(getActivity(), GoodsActivity.class)
                         .putExtra("businessId", childCategoryAdapter.getChildItem(position).BusinessId)
+                        .putExtra("userId", childCategoryAdapter.getChildItem(position).UserId)
                         .putExtra("businessName", childCategoryAdapter.getChildItem(position).BusinessName));
             }
         });
@@ -149,6 +150,20 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
         divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shape_trans_divider));
         rv_right.addItemDecoration(divider);
         rv_right.setAdapter(childCategoryAdapter);
+        // 列表滚动时优化图片加载
+        rv_right.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Glide.with(getContext()).pauseRequests(); // 列表滚动暂停图片加载
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Glide.with(getContext()).resumeRequests(); // 列表停止滚动启动图片加载
+            }
+        });
 
         //重新加载数据按钮事件
         btn_reload.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +173,7 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
                 requestData();
             }
         });
+
     }
 
     @Override
@@ -170,10 +186,12 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
     public void showErr(String err) {
         // 不管是请求所有类别出错还是请求指定的类别详情出错，都显示请求出错的界面
         ly_load_error.setVisibility(View.VISIBLE);
+        AMapLocationUtil.getInstance().stopLocation();
     }
 
     @Override
     public void showData(String data, Object tag) {
+        AMapLocationUtil.getInstance().startLocation();
         if ((int)tag == R.id.rv_left) {
             // 请求类别返回
             ly_load_error.setVisibility(View.GONE);
@@ -217,7 +235,7 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
 
         private double latitude, longitude;
 
-        private Map<Integer, Category> groupItem = new HashMap<>();
+        private Map<Integer, Integer> groupItem = new LinkedHashMap<>();
 
         public ChildCategoryAdapter(Context context, List<Category> data, MultiTypeSupport<Category> multiTypeSupport) {
             super(context, data, multiTypeSupport);
@@ -242,7 +260,7 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
         public int getItemCount() {
             int count = 0;
             for (int i = 0; i < mData.size(); i ++){
-                groupItem.put(count, mData.get(i)); // 记录类标签的位置，便于实现二级列表的效果
+                groupItem.put(count, i); // 记录类标签的位置，便于实现二级列表的效果.
                 // 统计每个类别下商家的个数
                 count += getChildItemCount(i) + 1; // 如果有商家，那么总项数为商家数+类别数
             }
@@ -251,18 +269,18 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
 
         // 根据位置获取group
         private Category getGroupItem(int position) {
-            return groupItem.get(position);
+            return mData.get(groupItem.get(position));
         }
 
         // 根据位置获取children
         private Business getChildItem(int position) {
             int group = -1;
             for (int key : groupItem.keySet()) {
-                // 遍历找到子类的父类信息
-                if (position > key) {
-                    group = key;
+                // 遍历找到子类的父类信息位置
+                if (position < key) {
                     break;
                 }
+                group = key;
             }
             if (group == -1) return null;
             return getGroupItem(group).Business.get(position - group - 1);

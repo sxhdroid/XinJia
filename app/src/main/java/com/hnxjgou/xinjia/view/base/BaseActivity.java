@@ -27,7 +27,7 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     private ProgressDialog progressDialog;
 
     private Toast mToast;
-    private ActionBar actionBar;
+    protected ActionBar actionBar;
 
     private BasePresenter<T, IBaseView> basePresenter;
 
@@ -66,15 +66,24 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
 
     private void initActionBar() {
         actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.icon_back);
     }
 
     public void setActionBarTitle(@StringRes int resId){
+        if (actionBar ==  null) {
+            return;
+        }
         actionBar.setTitle(resId);
     }
 
     public void setActionBarTitle(String title){
+        if (actionBar == null) {
+            return;
+        }
         actionBar.setTitle(title);
     }
 

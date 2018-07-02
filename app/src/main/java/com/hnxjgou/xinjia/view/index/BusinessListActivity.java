@@ -94,9 +94,10 @@ public class BusinessListActivity extends BaseActivity<List<Business>> implement
         businessAdapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView.ViewHolder holder, int position) {
-                // 跳转到商家详情
-                startActivity(new Intent(BusinessListActivity.this, BusinessDetailActivity.class)
+                // 跳转到商家商品列表
+                startActivity(new Intent(BusinessListActivity.this, GoodsActivity.class)
                         .putExtra("businessId", businessAdapter.getItem(position).BusinessId)
+                        .putExtra("userId", businessAdapter.getItem(position).UserId)
                         .putExtra("businessName", businessAdapter.getItem(position).BusinessName));
             }
         });

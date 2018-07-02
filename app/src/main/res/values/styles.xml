@@ -30,7 +30,7 @@
         <item name="android:paddingBottom">@dimen/margin_smallest</item>
     </style>
 
-    <!--通用文本提示风格-->
+    <!--通用文本提示风格颜色999999-->
     <style name="common_lable_style">
         <item name="android:textSize">@dimen/small_txt_size</item>
         <item name="android:textColor">@color/color_999999</item>
@@ -42,9 +42,31 @@
         <item name="android:background">@color/color_eeeee</item>
     </style>
 
+    <!--星评风格-->
     <style name="my_ratingbar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
         <item name="android:minHeight">17dp</item>
         <item name="android:maxHeight">17dp</item>
     </style>
+
+    <!--商家详情左侧文字风格，颜色eeeeee-->
+    <style name="business_detail_l_txt_style">
+        <item name="android:textSize">@dimen/small_txt_size</item>
+        <item name="android:textColor">@color/color_333333</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
+        <item name="android:paddingLeft">@dimen/padding_normal</item>
+        <item name="android:paddingRight">@dimen/padding_normal</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!--商家详情右侧文字风格，颜色eeeeee-->
+    <style name="business_detail_r_txt_style">
+        <item name="android:textSize">@dimen/small_txt_size</item>
+        <item name="android:textColor">@color/color_666666</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:lines">1</item>
+    </style>
+
 </resources>

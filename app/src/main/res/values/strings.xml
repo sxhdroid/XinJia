@@ -26,5 +26,22 @@
     <string name="sales">今日销量%1d</string>
     <string name="last_month_sales">上月销量%1d</string>
     <string name="extension">我要\n推广</string>
+    <string name="x_month">%1d月</string>
+    <string name="t_sales">销量(笔)\n%d</string>
+    <string name="orders">订单(个)\n%d</string>
+    <string name="amounts">营业额(元)\n%.2f</string>
+    <string name="amounts_wan">营业额(万)\n%.2f</string>
+    <string name="y_amounts_wan">年营业额(万)\n%.2f</string>
+    <string name="y_amounts">年营业额(元) %.2f</string>
+    <string name="more">更多</string>
+    <string name="store_name">店铺名称</string>
+    <string name="store_address">店铺地址</string>
+    <string name="business_hours">营业时间</string>
+    <string name="store">商家</string>
+    <string name="discount">优惠活动</string>
+    <string name="detail">详情</string>
+    <string name="price">¥%.2f元</string>
+    <string name="add_shopping_cart">加入购物车</string>
+
 
 </resources>

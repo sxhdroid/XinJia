@@ -60,6 +60,7 @@
         <activity
             android:name=".view.index.BusinessListActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.index.GoodsActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".view.index.BusinessDetailActivity"
             android:screenOrientation="portrait" />

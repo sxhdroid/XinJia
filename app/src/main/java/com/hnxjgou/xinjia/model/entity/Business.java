@@ -1,5 +1,7 @@
 package com.hnxjgou.xinjia.model.entity;
 
+import java.util.List;
+
 /**
  * 商家实体类
  */
@@ -18,11 +20,15 @@ public class Business {
      * 商家类型（1商铺、2个人）
      */
     public int BusinessType; //
+
+    /**
+     * 商家所属用户的ID
+     */
     public long UserId; //
     /**
      * 4张广告图,是一个JSON{[],[],[]}
      */
-    public String Advertisings; //
+    public List<String> Advertisings; //
     /**
      * 营业开始时间
      */
@@ -178,7 +184,7 @@ public class Business {
      */
     public double Score; //
     /**
-     * 商家活动说明
+     * 商家活动说明（优惠活动）
      */
     public String BusinessActivity; //
     /**
@@ -190,5 +196,28 @@ public class Business {
      */
     public int MonthMarketing; //
 
+    /**
+     * 订单数量
+     */
+    public int OrderNumber;
 
+    /**
+     * 营业额（分）
+     */
+    public long Turnover;
+
+    /**
+     * 销售总量（分）
+     */
+//    public int SalesVolume;
+
+    /**
+     * 年销售额（分）
+     */
+    public long YearTurnover;
+
+    /**
+     * 每月的销售数据
+     */
+    public List<Sales> BusinessSales;
 }

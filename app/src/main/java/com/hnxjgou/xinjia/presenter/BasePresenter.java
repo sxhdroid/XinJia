@@ -175,6 +175,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         int code = response.code();
+        LogUtil.i(TAG, "接口返回状态:" + code);
         if (code == 200) {
             try {
                 String responseStr = response.body().string();
@@ -194,7 +195,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
                         }
                     }else {
                         try {
-                            onSuccess((T) GsonUtil.json2Obj(responseStr, mType), response.request().tag());
+                            onSuccess((T) GsonUtil.json2Obj(responseStr, "Data", mType), response.request().tag());
                         }catch (JsonSyntaxException e){
                             onError(getView().getContext().getString(R.string.data_parse_error));
                         }
@@ -207,9 +208,11 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
                 e.printStackTrace();
             }
         }else {
+            LogUtil.i(TAG, "错误信息: " + response.message());
             onError(response.message());
         }
         onComplete(response.request().tag());
+        response.close();
     }
 
     public void onLoadDataByGet(String url, Object tag){

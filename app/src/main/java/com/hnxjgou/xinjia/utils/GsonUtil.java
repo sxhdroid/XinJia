@@ -34,7 +34,6 @@ public class GsonUtil {
 
 	/**
 	 * 
-	 * @param <T>
 	 * @param json
 	 * @param type
 	 *            转化的目标实体类
@@ -46,13 +45,27 @@ public class GsonUtil {
 		if (element.isJsonNull()) {
 			return null;
 		}
-		JsonObject jsonObject = element.getAsJsonObject();
-		if (jsonObject.isJsonNull()) {
+
+		return new Gson().fromJson(element, type);
+	}
+
+	/**
+	 *
+	 * @param json
+	 * @param elementName json字符串中目标对象的名称
+	 * @param type
+	 *            转化的目标实体类
+	 * @return
+	 */
+	public static <T> T json2Obj(String json, String elementName, Type type) throws JsonSyntaxException {
+
+		JsonElement element = new JsonParser().parse(json);
+		if (element.isJsonNull()) {
 			return null;
 		}
-		return new Gson().fromJson(jsonObject.toString(), type);
+		return new Gson().fromJson(element.getAsJsonObject().get(elementName), type);
 	}
-	
+
 	/**
 	 * 
 	 * @param <T>

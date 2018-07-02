@@ -43,7 +43,7 @@ public final class AMapLocationUtil {
     }
 
     public void removeLocationListener(OnLocationListener listener){
-        if (listener == null) return;
+        if (listener == null || locationListeners == null) return;
         locationListeners.remove(listener);
     }
 

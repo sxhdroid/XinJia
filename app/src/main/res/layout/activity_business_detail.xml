@@ -1,20 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context="com.hnxjgou.xinjia.view.index.BusinessDetailActivity">
 
     <RelativeLayout
-        android:id="@+id/rl_chart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_banner"
-        >
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/sales_chart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <!--顶部图表部分-->
+        <LinearLayout
+            android:id="@+id/ly_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_banner"
+            android:orientation="vertical">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/sales_chart"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/xxlarge_height"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_smallest" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="@dimen/padding_normal"
+                android:background="@color/color_eeeee" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_height"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_sales"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:lineSpacingExtra="@dimen/size_little"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/smaller_txt_size" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_eeeee" />
+
+                <TextView
+                    android:id="@+id/tv_orders"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/size_little"
+                    android:lines="2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/smaller_txt_size" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/color_eeeee" />
+
+                <TextView
+                    android:id="@+id/tv_amounts"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/size_little"
+                    android:lines="2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/smaller_txt_size" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--年营业额-->
+        <TextView
+            android:id="@+id/y_amount"
+            style="@style/business_detail_l_txt_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ly_chart"
+            android:text="@string/y_amounts" />
+
+        <View
+            android:id="@+id/v_line1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_little"
+            android:background="@color/color_eeeee"
+            android:layout_below="@id/y_amount"/>
+        <!--更多-->
+        <TextView
+            android:id="@+id/tv_more"
+            style="@style/business_detail_l_txt_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/v_line1"
+            android:drawableRight="@drawable/icon_arrow_right"
+            android:onClick="onMore"
+            android:text="@string/more" />
+        <View
+            android:id="@+id/v_line2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_little"
+            android:background="@color/color_eeeee"
+            android:layout_below="@id/tv_more"/>
+
+        <!--优惠活动-->
+        <LinearLayout
+            android:id="@+id/ly_discount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_normal"
+            android:layout_marginRight="@dimen/padding_normal"
+            android:layout_below="@id/v_line2"
+            android:background="@drawable/layout_list_b_border"
+            >
+            <TextView
+                style="@style/business_detail_l_txt_style"
+                android:paddingLeft="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discount" />
+
+            <TextView
+                android:id="@+id/tv_discount"
+                style="@style/business_detail_r_txt_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!--地址-->
+        <LinearLayout
+            android:id="@+id/ly_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ly_discount"
+            android:layout_alignLeft="@id/ly_discount"
+            android:layout_alignRight="@id/ly_discount"
+            android:background="@drawable/layout_list_b_border"
+            >
+            <TextView
+                style="@style/business_detail_l_txt_style"
+                android:paddingLeft="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_address" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                style="@style/business_detail_r_txt_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!--营业时间-->
+        <LinearLayout
+            android:id="@+id/ly_business_hours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ly_address"
+            android:layout_alignLeft="@id/ly_address"
+            android:layout_alignRight="@id/ly_address"
+            android:background="@drawable/layout_list_b_border"
+            >
+            <TextView
+                style="@style/business_detail_l_txt_style"
+                android:paddingLeft="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_address" />
+
+            <TextView
+                android:id="@+id/tv_business_hours"
+                style="@style/business_detail_r_txt_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            style="@style/business_detail_l_txt_style"
+            android:paddingLeft="0dp"
+            android:layout_below="@id/ly_business_hours"
+            android:layout_alignLeft="@id/ly_business_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail" />
+    </RelativeLayout>
+</ScrollView>
