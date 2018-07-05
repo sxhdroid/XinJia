@@ -1,6 +1,7 @@
 package com.hnxjgou.xinjia.view.user;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 
 import com.hnxjgou.xinjia.ApiConfig;
 import com.hnxjgou.xinjia.R;
+import com.hnxjgou.xinjia.common.Constant;
+import com.hnxjgou.xinjia.model.UserManager;
 import com.hnxjgou.xinjia.model.entity.User;
 import com.hnxjgou.xinjia.utils.LogUtil;
+import com.hnxjgou.xinjia.utils.SharedPreferenceUtil;
 import com.hnxjgou.xinjia.utils.StringUtil;
 import com.hnxjgou.xinjia.view.base.BaseFragment;
 import com.hnxjgou.xinjia.widget.ImageTextView;
@@ -75,6 +79,12 @@ public class LoginFragment extends BaseFragment<User> implements View.OnClickLis
         tv_regiester.setOnClickListener(this);
         tv_forget_pwd.setOnClickListener(this);
         itv_wechat.setOnClickListener(this);
+
+        if (TextUtils.isEmpty(et_pwd.getText()) || TextUtils.isEmpty(et_phone.getText())) {
+            btn_login.setEnabled(false);
+        }else {
+            btn_login.setEnabled(true);
+        }
     }
 
     @Override
@@ -102,6 +112,11 @@ public class LoginFragment extends BaseFragment<User> implements View.OnClickLis
         if ((int)tag == R.id.btn_login){
             // 登录返回
             LogUtil.i(TAG, "登录成功");
+            //保存登录信息
+            SharedPreferenceUtil.putString(getContext(), Constant.SHARED_KEY_PHONE, et_phone.getText().toString());
+            SharedPreferenceUtil .putString(getContext(), Constant.SHARED_KEY_PWD, et_pwd.getText().toString());
+            UserManager.getInstance().updataUserInfo(data); // 更新用户信息
+            getActivity().setResult(Activity.RESULT_OK);
             finish();
         }else if ((int)tag == R.id.itv_wechat){
             // 微信登录返回

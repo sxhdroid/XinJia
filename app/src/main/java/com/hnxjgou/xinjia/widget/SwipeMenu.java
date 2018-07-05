@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -324,7 +323,7 @@ public class SwipeMenu extends ViewGroup {
 
         void startScroll(int startX,int endX){
             if(startX!=endX){
-                Log.e("scroll - startX - endX",""+startX+" "+endX);
+//                Log.e("scroll - startX - endX",""+startX+" "+endX);
                 setTouchMode(Mode.FLING);
                 abort = false;
 
@@ -334,7 +333,7 @@ public class SwipeMenu extends ViewGroup {
         }
 
         void startFling(int startX,int xVel){
-            Log.e("fling - startX",""+startX);
+//            Log.e("fling - startX",""+startX);
 
             if(xVel> minVelocity && startX!=0) {
                 startScroll(startX, 0);
@@ -361,11 +360,11 @@ public class SwipeMenu extends ViewGroup {
 
         @Override
         public void run() {
-            Log.e("abort",Boolean.toString(abort));
+//            Log.e("abort",Boolean.toString(abort));
             if(!abort){
                 boolean more = scroller.computeScrollOffset();
                 int curX = scroller.getCurrX();
-                Log.e("curX",""+curX);
+//                Log.e("curX",""+curX);
 
                 boolean atEdge = false;
                 if(curX!=scrollOffset)

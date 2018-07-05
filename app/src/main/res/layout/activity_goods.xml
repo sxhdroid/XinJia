@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rly_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_f2f2f2"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_common_recycleview"/>
+    <Button
+        android:id="@+id/btn_add_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/large_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="toAddGoods"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/common_btn_selector"/>
 
-</LinearLayout>
+    <include layout="@layout/layout_common_recycleview"
+        android:layout_above="@id/btn_add_goods"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/padding_normal"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/iv_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="toCart"
+            android:clickable="true"
+            android:background="@drawable/icon_cart_large"/>
+
+        <ImageView
+            android:id="@+id/iv_to_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_to_top"
+            android:visibility="invisible"
+            android:onClick="toTop"
+            android:clickable="true"
+            android:layout_below="@id/iv_cart"
+            android:layout_marginTop="@dimen/margin_small"/>
+    </RelativeLayout>
+
+</RelativeLayout>

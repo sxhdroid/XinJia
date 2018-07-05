@@ -24,7 +24,7 @@ public class Business {
     /**
      * 商家所属用户的ID
      */
-    public long UserId; //
+    public int UserId; //
     /**
      * 4张广告图,是一个JSON{[],[],[]}
      */

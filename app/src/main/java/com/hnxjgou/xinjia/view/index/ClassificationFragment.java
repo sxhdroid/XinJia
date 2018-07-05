@@ -139,7 +139,7 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
                 // 右侧商家点击事件
                 AMapLocationUtil.getInstance().stopLocation();
                 AMapLocationUtil.getInstance().removeLocationListener(ClassificationFragment.this);
-                startActivity(new Intent(getActivity(), GoodsActivity.class)
+                startActivity(new Intent(getActivity(), GoodsByCategoryActivity.class)
                         .putExtra("businessId", childCategoryAdapter.getChildItem(position).BusinessId)
                         .putExtra("userId", childCategoryAdapter.getChildItem(position).UserId)
                         .putExtra("businessName", childCategoryAdapter.getChildItem(position).BusinessName));
@@ -155,13 +155,13 @@ public class ClassificationFragment extends LazyLoadFragment<String> implements 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Glide.with(getContext()).pauseRequests(); // 列表滚动暂停图片加载
+                Glide.with(getContext()).resumeRequests(); // 列表停止滚动启动图片加载
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Glide.with(getContext()).resumeRequests(); // 列表停止滚动启动图片加载
+                Glide.with(getContext()).pauseRequests(); // 列表滚动暂停图片加载
             }
         });
 

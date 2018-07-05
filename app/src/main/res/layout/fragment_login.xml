@@ -16,6 +16,7 @@
         android:inputType="phone"
         android:imeOptions="actionNext"
         android:hint="@string/input_phone"
+        android:text="13560343975"
         android:drawableLeft="@drawable/icon_phone"
         />
 
@@ -30,6 +31,7 @@
         android:imeOptions="actionDone"
         android:layout_marginTop="@dimen/margin_normal"
         android:hint="@string/input_pwd"
+        android:text="123456"
         android:drawableLeft="@drawable/icon_pwd"
         />
 

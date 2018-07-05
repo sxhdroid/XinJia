@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import com.hnxjgou.xinjia.R;
 import com.hnxjgou.xinjia.model.Callback;
 import com.hnxjgou.xinjia.model.OkHttpUtil;
+import com.hnxjgou.xinjia.model.UserManager;
 import com.hnxjgou.xinjia.utils.GsonUtil;
 import com.hnxjgou.xinjia.utils.LogUtil;
 import com.hnxjgou.xinjia.view.base.IBaseView;
@@ -122,6 +123,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onSuccess(final T data, final Object tag) {
+        if (getView().getContext() == null) return;
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -132,6 +134,9 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onFailure(final String msg) {
+        if (getView().getContext() == null) {
+            return;
+        }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -142,6 +147,9 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onError(final String error) {
+        if (getView().getContext() == null) {
+            return;
+        }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -152,6 +160,9 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onComplete(final Object tag) {
+        if (getView().getContext() == null) {
+            return;
+        }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -163,6 +174,9 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onFailure(final Call call, final IOException e) {
+        if (getView().getContext() == null) {
+            return;
+        }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -174,6 +188,9 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
+        if (getView().getContext() == null) {
+            return;
+        }
         int code = response.code();
         LogUtil.i(TAG, "接口返回状态:" + code);
         if (code == 200) {
@@ -183,6 +200,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
                 JSONObject jsonObject = new JSONObject(responseStr);
                 int api_code = jsonObject.optInt("Code", -1);
                 if (api_code == 200) { // 接口调用逻辑成功返回
+                    UserManager.getInstance().setToken(jsonObject.optString("Token", ""));
                     if (mType.equals(String.class) || mType.equals(Object.class)) {
                         onSuccess((T) responseStr, response.request().tag());
                     }else if (mType instanceof ParameterizedType){
@@ -218,7 +236,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
     public void onLoadDataByGet(String url, Object tag){
         if (isViewAttached()) {
             onPrepare(tag);
-            tags.add(tag);
+            tags.add(tag == null ? url : tag);
             OkHttpUtil.getInstance().requestGetAPI(url, tag, this);
         }
     }
@@ -226,7 +244,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
     public void onLoadDataByPost(String url, Object tag, Map<String, String> params){
         if (isViewAttached()) {
             onPrepare(tag);
-            tags.add(tag);
+            tags.add(tag == null ? url : tag);
             OkHttpUtil.getInstance().requestPostAPI(url, tag, params, this);
         }
     }

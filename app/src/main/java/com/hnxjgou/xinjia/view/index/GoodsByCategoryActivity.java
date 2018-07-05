@@ -4,27 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hnxjgou.xinjia.ApiConfig;
 import com.hnxjgou.xinjia.R;
+import com.hnxjgou.xinjia.model.UserManager;
 import com.hnxjgou.xinjia.model.entity.Goods;
 import com.hnxjgou.xinjia.model.entity.GoodsCategory;
 import com.hnxjgou.xinjia.view.adapter.CommonRecyclerAdapter;
 import com.hnxjgou.xinjia.view.adapter.MultiTypeSupport;
 import com.hnxjgou.xinjia.view.adapter.ViewHolder;
-import com.hnxjgou.xinjia.view.base.BaseActivity;
-import com.hnxjgou.xinjia.widget.RecycleViewDivider;
 import com.hnxjgou.xinjia.widget.SwipeMenu;
 
 import java.util.ArrayList;
@@ -33,16 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * 商家商品列表界面。按类别分
+ * 按类别分类的商品列表界面。
  */
-public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
+public class GoodsByCategoryActivity extends GoodsListBaseActivity<List<GoodsCategory>> {
 
-    private int businessId; // 商家ID
-    private long userId;// 商家所属的用户id
-    private RecyclerView goodsView; // 商品列表展示控件
-
-    private LinearLayout ly_load_error; // 数据加载失败时显示
 
     private GoodsByCategoryAdapter adapter;
     private List<GoodsCategory> goodsCategories = new ArrayList<>();
@@ -50,74 +41,12 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goods);
-
-        businessId = getIntent().getIntExtra("businessId", -1);
-        if (businessId == -1) {
-            showToast(getString(R.string.data_error));
-            return;
-        }
-//        LogUtil.e(TAG, "商家ID ： " + businessId);
-        setActionBarTitle(getIntent().getStringExtra("businessName"));
-        userId = getIntent().getLongExtra("userId", 0);
-
-        initViews();
         loadGoods();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.business_detail, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.action_detail:
-                startActivity(new Intent(this, BusinessDetailActivity.class)
-                        .putExtra("businessId", businessId)
-                        .putExtra("businessName", getTitle()));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void initViews(){
-        goodsView = findViewById(R.id.rv_common);
-        goodsView.setLayoutManager(new LinearLayoutManager(getContext()));
-        RecycleViewDivider divider = new RecycleViewDivider(getContext(), RecycleViewDivider.VERTICAL_LIST);
-        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shape_trans_divider));
-        goodsView.addItemDecoration(divider);
-
-        // 列表滚动时优化图片加载
-        goodsView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                Glide.with(getContext()).pauseRequests(); // 列表滚动暂停图片加载
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Glide.with(getContext()).resumeRequests(); // 列表停止滚动启动图片加载
-            }
-        });
-
-        ly_load_error = findViewById(R.id.ly_load_error);
-        ly_load_error.setVisibility(View.GONE);
-        // 重新加载按钮点击事件
-        findViewById(R.id.btn_reload).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadGoods();
-            }
-        });
+    protected void initViews(){
+        super.initViews();
 
         adapter = new GoodsByCategoryAdapter(this, goodsCategories, new MultiTypeSupport() {
             @Override
@@ -130,6 +59,9 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
             @Override
             public void onGroupClick(RecyclerView.ViewHolder holder, int position) {
                 // 类别项点击事件
+                startActivity(new Intent(GoodsByCategoryActivity.this, GoodsListActivity.class)
+                        .putExtras(getIntent().getExtras())
+                        .putExtra("categoryId", adapter.getGroupItem(position).BusinessCategoryId));
             }
 
             @Override
@@ -138,12 +70,11 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
             }
         });
         goodsView.setAdapter(adapter);
-        goodsView.addOnItemTouchListener(new SwipeMenu.OnSwipeItemTouchListener(getContext()));
-
     }
 
     // 获取商家商品列表
-    private void loadGoods(){
+    @Override
+    protected void loadGoods(){
         Map<String, String> params = new HashMap<>();
         params.put("businessId", businessId + "");
         doPost(ApiConfig.business.build_url(ApiConfig.business.API_BUSINESS_CATEGORY), null, params);
@@ -153,11 +84,6 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
     public void showData(List<GoodsCategory> data, Object tag) {
         goodsCategories.addAll(data);
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void showErr(String err) {
-        ly_load_error.setVisibility(View.VISIBLE);
     }
 
     // 商品列表适配器
@@ -236,7 +162,7 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
         }
 
         @Override
-        public void convert(ViewHolder holder, int position, GoodsCategory item) {
+        public void convert(final ViewHolder holder, final int position, GoodsCategory item) {
             if (getViewType(position) == viewTypeGroup) {
                 holder.setText(R.id.tv_category_name, getGroupItem(position).Name);
                 Glide.with(getContext())
@@ -245,7 +171,7 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
                         .placeholder(R.mipmap.ic_launcher)
                         .into((ImageView) holder.getView(R.id.iv_category));
             }else {
-                Goods goods = getChildItem(position);
+                final Goods goods = getChildItem(position);
                 Glide.with(getContext())
                         .load(goods.Commoditylogo)
                         .error(R.mipmap.ic_launcher)
@@ -259,6 +185,29 @@ public class GoodsActivity extends BaseActivity<List<GoodsCategory>> {
                 TextView textView = holder.getView(R.id.tv_original_price);
                 textView.setText(getString(R.string.price, goods.OriginalPrice / 100f));
                 textView.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); // 设置中划线
+
+                Button btn_opt = holder.getView(R.id.btn_opt);
+                btn_opt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (UserManager.getInstance().isLogin()) {
+                            if (userId == UserManager.getInstance().getUserId()) {
+                                // 用户是该商家的主人
+
+                            }else {
+                                // 显示的是加入购物车按钮,执行加入购物车逻辑
+                                addGoodsToCart((ImageView) holder.getView(R.id.iv_goods_logo), goods.CommodityId);
+                                //关闭侧滑菜单
+                                LinearLayoutManager layoutManager = (LinearLayoutManager) goodsView.getLayoutManager();
+                                SwipeMenu swipeMenu = (SwipeMenu) layoutManager.findViewByPosition(position);
+                                swipeMenu.close();
+                            }
+                        }else {
+                            // 没有登录跳转登录界面
+                            UserManager.getInstance().toLoginActivity(GoodsByCategoryActivity.this, 1);
+                        }
+                    }
+                });
 
             }
         }

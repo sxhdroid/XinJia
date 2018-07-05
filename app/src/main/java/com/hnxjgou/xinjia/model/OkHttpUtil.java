@@ -64,18 +64,20 @@ public class OkHttpUtil {
                 builder.add(key, params.get(key));
             }
         }
-        builder.add("user_token", "");
+        builder.add("user_token", UserManager.getInstance().getToken());
         Request request = new Request.Builder()
                 .url(url)
                 .post(builder.build())
                 .tag(tag == null ? url : tag)
                 .build();
         LogUtil.i("requestPostAPI", "url = " + url);
+        LogUtil.i("requestPostAPI", "token = " + UserManager.getInstance().getToken());
         httpClient.newCall(request).enqueue(callback);
     }
 
     /**根据tag取消请求*/
     public void cancelTag(Object tag) {
+        if (tag == null) return;
         for (Call call : httpClient.dispatcher().queuedCalls()) {
             if (tag.equals(call.request().tag())) {
                 call.cancel();

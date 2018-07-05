@@ -61,24 +61,6 @@
             android:textColor="@color/color_999999"
             android:textSize="@dimen/small_txt_size" />
 
-        <ImageView
-            android:id="@+id/iv_line"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_alignLeft="@id/iv_goods_logo"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_price"
-            android:layout_marginTop="@dimen/margin_smallest"
-            android:background="@color/color_dddddd" />
-
-        <Button
-            android:id="@+id/btn_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/iv_line"
-            android:layout_marginTop="@dimen/margin_smallest" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -86,9 +68,12 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/delete"
-            android:layout_width="100dp"
+            android:id="@+id/btn_opt"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:minWidth="@dimen/common_width"
+            android:paddingLeft="@dimen/margin_smaller"
+            android:paddingRight="@dimen/margin_smaller"
             android:background="@color/red"
             android:text="@string/add_shopping_cart"
             android:textColor="@color/white"

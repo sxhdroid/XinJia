@@ -50,6 +50,9 @@ public class ApiConfig {
         /**获取商家分类商品列表-API名称*/
         public final static String API_BUSINESS_CATEGORY = "getBusinessCaegory ";
 
+        /**获取指定分类商品列表-API名称*/
+        public final static String API_GOODS = "getCommodityList ";
+
         private static final String BASE_PROJECT_URL = "http://www.hnxjgou.com/wechat/api/business/businessApi.asmx/";
 
         public static String build_url(String api_method){
