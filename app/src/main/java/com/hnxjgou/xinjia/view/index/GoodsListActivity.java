@@ -118,6 +118,11 @@ public class GoodsListActivity extends GoodsListBaseActivity<List<Goods>> {
         }
     }
 
+    @Override
+    public void showLoading(Object tag) {
+        if (currentPage == 0) super.showLoading(tag);
+    }
+
     // 商品列表适配器
     private class GoodsAdapter extends CommonRecyclerAdapter<Goods> {
 

@@ -123,7 +123,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onSuccess(final T data, final Object tag) {
-        if (getView().getContext() == null) return;
+        if (getView() == null) return;
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -134,7 +134,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onFailure(final String msg) {
-        if (getView().getContext() == null) {
+        if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
@@ -147,7 +147,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onError(final String error) {
-        if (getView().getContext() == null) {
+        if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
@@ -160,7 +160,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onComplete(final Object tag) {
-        if (getView().getContext() == null) {
+        if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
@@ -174,7 +174,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onFailure(final Call call, final IOException e) {
-        if (getView().getContext() == null) {
+        if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
@@ -188,7 +188,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        if (getView().getContext() == null) {
+        if (getView() == null) {
             return;
         }
         int code = response.code();

@@ -151,6 +151,11 @@ public class BusinessListActivity extends BaseActivity<List<Business>> implement
     }
 
     @Override
+    public void showLoading(Object tag) {
+        if (currentPage == 0) super.showLoading(tag);
+    }
+
+    @Override
     public void showErr(String err) {
         if (currentPage == 0) {
             // 加载第一页失败才显示加载失败的视图
