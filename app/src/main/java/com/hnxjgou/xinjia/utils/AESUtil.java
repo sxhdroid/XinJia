@@ -24,7 +24,6 @@ public class AESUtil {
 
 	/**
 	 * 加密
-	 * 
 	 * @param clearText
 	 *            要加密的字串
 	 * @return 加密之后的字串

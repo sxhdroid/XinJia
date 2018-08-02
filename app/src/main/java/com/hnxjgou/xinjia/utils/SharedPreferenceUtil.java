@@ -6,7 +6,9 @@ import android.content.SharedPreferences.Editor;
 
 public class SharedPreferenceUtil {
 
+
     private final static String PREFERENCE_NAME = "com_hnxjgou_xinjia";
+
 
     public static void putString(Context context, String key, String value){
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);

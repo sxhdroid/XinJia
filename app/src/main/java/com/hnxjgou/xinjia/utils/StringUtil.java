@@ -24,8 +24,7 @@ public class
 	
 	 /** 
      * 电话号码验证 
-     *  
-     * @param  str 
+     * @param  str
      * @return 验证通过返回true 
      */  
     public static boolean isPhone(String str) { 
