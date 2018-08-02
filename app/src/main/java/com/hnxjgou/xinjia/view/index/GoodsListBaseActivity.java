@@ -22,12 +22,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.hnxjgou.xinjia.ApiConfig;
 import com.hnxjgou.xinjia.R;
+import com.hnxjgou.xinjia.model.Callback;
+import com.hnxjgou.xinjia.model.OkHttpUtil;
 import com.hnxjgou.xinjia.model.UserManager;
+import com.hnxjgou.xinjia.model.entity.Goods;
+import com.hnxjgou.xinjia.utils.GsonUtil;
 import com.hnxjgou.xinjia.utils.LogUtil;
 import com.hnxjgou.xinjia.view.base.BaseActivity;
 import com.hnxjgou.xinjia.widget.RecycleViewDivider;
 import com.hnxjgou.xinjia.widget.SwipeMenu;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 
 /**
@@ -41,7 +56,7 @@ public abstract class GoodsListBaseActivity<T> extends BaseActivity<T> {
 
     protected RecyclerView goodsView; // 商品列表展示控件
 
-    private LinearLayout ly_load_error; // 数据加载失败时显示
+    protected LinearLayout ly_load_error; // 数据加载失败时显示
     private RelativeLayout mRootRl; // 界面根布局节点
 
     private Button btn_add_goods; // 添加商品
@@ -197,7 +212,72 @@ public abstract class GoodsListBaseActivity<T> extends BaseActivity<T> {
     }
 
     // 将货物添加至购物车
-    protected void addGoodsToCart(ImageView imageView, int goodsId){
+    protected void addGoodsToCart(final ImageView imageView, Goods goods) {
+        showLoading(null);
+        Map<String, String> params = new HashMap<>();
+        params.put("commodityId", goods.CommodityId+"");
+        params.put("commodityNumber", "1");
+        params.put("attributeIds", goods.AttributeIds);
+        params.put("partsJson", GsonUtil.list2json(goods.Attributes));
+
+        OkHttpUtil.getInstance()
+                .requestPostAPI(ApiConfig.order.build_url(ApiConfig.order.API_ADD_CART)
+                        , null, params, new Callback() {
+                            @Override
+                            public void onPrepare(Object tag) {
+                            }
+
+                            @Override
+                            public void onSuccess(Object data, Object tag) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Object tag, String msg) {
+                                showToast("加入购物车失败");
+                            }
+
+                            @Override
+                            public void onError(Object tag, String error) {
+                                showToast("加入购物车错误" + error);
+                            }
+
+                            @Override
+                            public void onComplete(Object tag) {
+                                hideLoading(tag);
+                            }
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                onFailure(call.request().tag(), e.getMessage());
+                                onComplete(call.request().tag());
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                int code = response.code();
+                                LogUtil.i(TAG, "接口返回状态:" + code);
+                                if (code == 200) {
+                                    try {
+
+                                        String responseStr = response.body().string();
+                                        LogUtil.i(TAG, "接口返回:" + responseStr);
+                                        JSONObject jsonObject = new JSONObject(responseStr);
+                                        int api_code = jsonObject.optInt("Code", -1);
+                                        if (api_code == 200) { // 接口调用逻辑成功返回
+                                            startCartAnim(imageView);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                onComplete(response.request().tag());
+                                response.close();
+                            }
+                        });
+    }
+
+    private void startCartAnim(ImageView imageView) {
 
         final ImageView view = new ImageView(this);
         view.setImageDrawable(imageView.getDrawable());

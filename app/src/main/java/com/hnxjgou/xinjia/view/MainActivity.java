@@ -56,13 +56,10 @@ public class MainActivity extends BaseActivity {
                 // 设置标题随tab页变化
                 if (position == 0) {
                     setActionBarTitle(R.string.classify);
-                    showActionBar();
                 } else if (position == 1) {
                     setActionBarTitle(R.string.shopping_cart);
-                    showActionBar();
                 } else {
                     setActionBarTitle(R.string.mine);
-                    hideActionBar();
                 }
             }
 

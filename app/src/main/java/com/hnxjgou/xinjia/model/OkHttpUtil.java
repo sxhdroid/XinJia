@@ -61,7 +61,7 @@ public class OkHttpUtil {
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null) {
             for (String key : params.keySet()) {
-                builder.add(key, params.get(key));
+                builder.add(key, params.get(key) == null ? "" : params.get(key));
             }
         }
         builder.add("user_token", UserManager.getInstance().getToken());
@@ -71,7 +71,7 @@ public class OkHttpUtil {
                 .tag(tag == null ? url : tag)
                 .build();
         LogUtil.i("requestPostAPI", "url = " + url);
-        LogUtil.i("requestPostAPI", "token = " + UserManager.getInstance().getToken());
+//        LogUtil.i("requestPostAPI", "token = " + UserManager.getInstance().getToken());
         httpClient.newCall(request).enqueue(callback);
     }
 

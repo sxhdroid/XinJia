@@ -30,6 +30,13 @@ public interface IBaseView<T> {
      */
     void showErr(String err);
 
+    /**
+     *  显示请求错误提示
+     * @param tag 用来区分不同业务逻辑
+     * @param err 错误消息
+     */
+    void showErr(Object tag, String err);
+
 
     /**
      * 请求成功显示数据

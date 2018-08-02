@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * 商家详情界面
@@ -200,9 +199,8 @@ public class BusinessDetailActivity extends BaseActivity<Business> {
         List<Entry> entries = new ArrayList<>();
 
         if (business.BusinessSales == null) return;
-        Random random = new Random();
         for (Sales data : business.BusinessSales) {
-            entries.add(new Entry(data.Month, data.Amount + random.nextInt(100)));
+            entries.add(new Entry(data.Month, data.Amount/ 100000f));
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "月销售额（千）"); // add entries to dataset

@@ -32,6 +32,16 @@ public class GsonUtil {
 		return new Gson().toJson(bean);
 	}
 
+	public static String list2json(List datas) {
+		if (datas == null || datas.isEmpty()) return null;
+		JsonArray jsonArray = new JsonArray();
+		for (Object obj: datas) {
+			JsonElement element = new JsonParser().parse(bean2json(obj));
+			jsonArray.add(element);
+		}
+		return jsonArray.toString();
+	}
+
 	/**
 	 * 
 	 * @param json

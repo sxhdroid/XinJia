@@ -99,6 +99,7 @@ public class GoodsListActivity extends GoodsListBaseActivity<List<Goods>> {
 
     @Override
     public void showData(List<Goods> data, Object tag) {
+        ly_load_error.setVisibility(View.GONE);
         if (currentPage == 0 && !goodsList.isEmpty()) {
             goodsList.clear();
         }
@@ -157,7 +158,7 @@ public class GoodsListActivity extends GoodsListBaseActivity<List<Goods>> {
 
                         } else {
                             // 显示的是加入购物车按钮,执行加入购物车逻辑
-                            addGoodsToCart((ImageView) holder.getView(R.id.iv_goods_logo), goods.CommodityId);
+                            addGoodsToCart((ImageView) holder.getView(R.id.iv_goods_logo), goods);
                             //关闭侧滑菜单
                             LinearLayoutManager layoutManager = (LinearLayoutManager) goodsView.getLayoutManager();
                             SwipeMenu swipeMenu = (SwipeMenu) layoutManager.findViewByPosition(position);

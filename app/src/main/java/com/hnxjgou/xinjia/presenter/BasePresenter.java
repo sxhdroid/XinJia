@@ -133,27 +133,27 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
     }
 
     @Override
-    public void onFailure(final String msg) {
+    public void onFailure(final Object tag, final String msg) {
         if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mvpView.showErr(msg);
+                mvpView.showErr(tag, msg);
             }
         });
     }
 
     @Override
-    public void onError(final String error) {
+    public void onError(final Object tag, final String error) {
         if (getView() == null) {
             return;
         }
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mvpView.showErr(error);
+                mvpView.showErr(tag, error);
             }
         });
     }
@@ -180,7 +180,7 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
         ((Activity)getView().getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onFailure(e.getMessage());
+                onFailure(call.request().tag(), e.getMessage());
                 onComplete(call.request().tag());
             }
         });
@@ -209,25 +209,25 @@ public class BasePresenter<T, V extends IBaseView> implements Callback<T> {
                             onSuccess((T) GsonUtil.jsonArray2List(responseStr, "Data"
                                     , ((ParameterizedType) mType).getActualTypeArguments()[0]), response.request().tag());
                         }catch (JsonSyntaxException e){
-                            onError(getView().getContext().getString(R.string.data_parse_error));
+                            onError(response.request().tag(), getView().getContext().getString(R.string.data_parse_error));
                         }
                     }else {
                         try {
                             onSuccess((T) GsonUtil.json2Obj(responseStr, "Data", mType), response.request().tag());
                         }catch (JsonSyntaxException e){
-                            onError(getView().getContext().getString(R.string.data_parse_error));
+                            onError(response.request().tag(), getView().getContext().getString(R.string.data_parse_error));
                         }
                     }
                 }else {
                     // 接口调用出现异常
-                    onError(jsonObject.optString("Message", getView().getContext().getString(R.string.data_parse_error)));
+                    onError(response.request().tag(), jsonObject.optString("Message", getView().getContext().getString(R.string.data_parse_error)));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }else {
             LogUtil.i(TAG, "错误信息: " + response.message());
-            onError(response.message());
+            onError(response.request().tag(), response.message());
         }
         onComplete(response.request().tag());
         response.close();

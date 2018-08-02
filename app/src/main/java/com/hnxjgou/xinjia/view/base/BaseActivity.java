@@ -161,6 +161,11 @@ public class BaseActivity<T> extends AppCompatActivity implements IBaseView<T>, 
     }
 
     @Override
+    public void showErr(Object tag, String err) {
+        showErr(err);
+    }
+
+    @Override
     public void showData(T data, Object tag) {
 
     }

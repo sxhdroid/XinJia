@@ -59,4 +59,17 @@ public class ApiConfig {
             return BASE_PROJECT_URL + api_method;
         }
     }
+
+    /**订单相关*/
+    public final static class order {
+        /**获取指定分类商品列表-API名称*/
+        public final static String API_ADD_CART = "andCart ";
+
+        private static final String BASE_PROJECT_URL = "http://www.hnxjgou.com/wechat/api/order/orderApi.asmx/";
+
+        public static String build_url(String api_method){
+            return BASE_PROJECT_URL + api_method;
+        }
+    }
+
 }

@@ -106,6 +106,11 @@ public abstract class BaseFragment<T> extends Fragment implements IBaseView<T> {
     }
 
     @Override
+    public void showErr(Object tag, String err) {
+        if (context != null && context instanceof BaseActivity) ((BaseActivity) context).showErr(tag, err);
+    }
+
+    @Override
     public void showData(T data, Object tag) {
 
     }
